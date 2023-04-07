@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+spec:
+  selector:
+    matchLabels:
+      app: data
+  template:
+    metadata:
+      labels:
+        app: data
+    spec:
+      volumes:
+        - name: data-storage
+          persistentVolumeClaim:
+            claimName: mypvc
+      containers:
+        - name: database
+          image: mysql:5.7
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: "/data"
+              name: data-storage
+
